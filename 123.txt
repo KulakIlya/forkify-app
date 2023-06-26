@@ -1,0 +1,35 @@
+<li class="recipe__ingredient">
+        <svg class="recipe__icon">
+          <use href="src/img/icons.svg#icon-check"></use>
+        </svg>
+        <div class="recipe__quantity">1000</div>
+        <div class="recipe__description">
+          <span class="recipe__unit">g</span>
+          pasta
+        </div>
+      </li>
+
+      <li class="recipe__ingredient">
+        <svg class="recipe__icon">
+          <use href="src/img/icons.svg#icon-check"></use>
+        </svg>
+        <div class="recipe__quantity">0.5</div>
+        <div class="recipe__description">
+          <span class="recipe__unit">cup</span>
+          ricotta cheese
+        </div>
+      </li>
+
+
+
+
+
+      // cookingTime: 45
+    // id: "5ed6604591c37cdc054bc886"
+    // imageUrl: "http://forkify-api.herokuapp.com/images/FlatBread21of1a180.jpg"
+    // ingredients: (7) [{…}, {…}, {…}, {…}, {…}, {…}, {…}]
+    // publisher: "My Baking Addiction"
+    // servings: 4
+    // sourceUrl: "http://www.mybakingaddiction.com/spicy-chicken-and-pepper-jack-pizza-recipe/"
+    // title : "Spicy Chicken and Pepper Jack Pizza"
+        
