@@ -22,6 +22,15 @@
 
 
 
+{
+    imageUrl,
+    title,
+    cookingTime,
+    servings,
+    ingredients,
+    publisher,
+    sourceUrl,
+  }
 
 
       // cookingTime: 45
