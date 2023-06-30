@@ -16,15 +16,14 @@
     "url": "https://github.com/KulakIlya/forkify-app/issues"
   },
   "homepage": "https://github.com/KulakIlya/forkify-app#readme",
-  "devDependencies": {
-    "@parcel/transformer-sass": "^2.9.3",
-    "parcel": "^2.0.0",
-    "process": "^0.11.10"
-  },
   "dependencies": {
     "core-js": "^3.31.0",
-    "fractional": "^1.0.0",
+    "fraction.js": "^4.2.0",
     "lodash-es": "^4.17.21",
-    "regenerator-runtime": "^0.13.11"
+    "parcel": "^2.9.3"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.9.3",
+    "process": "^0.11.10"
   }
 }

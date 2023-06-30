@@ -1,31 +1,35 @@
-import { camelCase } from 'lodash';
+import { API_URL } from './config';
+import { getJSON, objectKeysToCamelCase } from './helpers';
 
 export const state = {
   recipe: {},
+  search: {
+    query: '',
+    results: [],
+  },
 };
 
 export const loadRecipe = async (hash) => {
-  const objectKeysToCamelCase = (obj) =>
-    Object.keys(obj).reduce((acc, item) => {
-      return {
-        ...acc,
-        [camelCase(item)]: obj[item],
-      };
-    }, {});
-
   try {
-    const res = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes/${hash}`
-    );
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(`${data.message} (${res.status})`);
-
+    const data = await getJSON(`${API_URL}/${hash}`);
     const { recipe } = data.data;
 
     state.recipe = objectKeysToCamelCase(recipe);
-    // console.log(objectKeysToCamelCase(recipe));
   } catch (error) {
-    alert(error);
+    throw error;
+  }
+};
+
+export const loadSearchResults = async (query) => {
+  try {
+    state.search.query = query;
+
+    const data = await getJSON(`${API_URL}?search=${query}`);
+    const { recipes } = data.data;
+    state.search.results = recipes.map((recipe) =>
+      objectKeysToCamelCase(recipe)
+    );
+  } catch (error) {
+    throw error;
   }
 };

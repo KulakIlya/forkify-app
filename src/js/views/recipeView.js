@@ -1,17 +1,13 @@
-import { Fraction } from 'fractional';
+import Fraction from 'fraction.js';
 import icons from 'url:../../img/icons.svg';
+import View from './View';
 
-class RecipeView {
-  #data;
-  #parentElement = document.querySelector('.recipe');
+class RecipeView extends View {
+  _data;
+  _parentElement = document.querySelector('.recipe');
+  _errorMessage = "We couldn't find recipe. Please try another one!";
 
-  render(data) {
-    this.#data = data;
-
-    this.#parentElement.innerHTML = this.#generateMarkup();
-  }
-
-  #generateMarkup() {
+  _generateMarkup() {
     const {
       imageUrl,
       title,
@@ -20,7 +16,7 @@ class RecipeView {
       ingredients,
       publisher,
       sourceUrl,
-    } = this.#data;
+    } = this._data;
 
     return `
     <figure class="recipe__fig">
@@ -82,7 +78,7 @@ class RecipeView {
           <use href="${icons}#icon-check"></use>
         </svg>
         <div class="recipe__quantity">${
-          quantity ? new Fraction(quantity).toString().split(' ')[0] : ''
+          quantity ? new Fraction(quantity).toFraction() : ''
         }</div>
         <div class="recipe__description">
           <span class="recipe__unit">${unit}</span>
@@ -115,12 +111,9 @@ class RecipeView {
    `;
   }
 
-  renderSpinner() {
-    this.#parentElement.innerHTML = `<div class="spinner">
-      <svg>
-        <use href="${icons}#icon-loader"></use>
-      </svg>
-    </div> `;
+  addHandlerRender(handler) {
+    window.addEventListener('load', handler);
+    window.addEventListener('hashchange', handler);
   }
 }
 
