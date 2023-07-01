@@ -1,16 +1,13 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime'; // polyfilling async/await
 import * as model from './model.js';
+import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
 import searchView from './views/searchView..js';
 if (module.hot) {
   module.hot.accept();
 }
-
-// https://forkify-api.herokuapp.com/v2
-
-///////////////////////////////////////
 
 const handleRecipe = async () => {
   try {
@@ -19,7 +16,6 @@ const handleRecipe = async () => {
     if (!hash) return;
     recipeView.renderSpinner();
 
-    // 2) Loading recipe
     await model.loadRecipe(hash);
 
     recipeView.render(model.state.recipe);
@@ -34,15 +30,22 @@ const handleSearchResults = async () => {
     resultsView.renderSpinner();
 
     const query = searchView.getQuery();
-    if (!query) return;
+    if (!query) return resultsView.renderError();
 
     await model.loadSearchResults(query);
 
-    resultsView.render(model.state.search.results);
+    resultsView.render(model.getSearchResultsPage());
+    paginationView.render(model.state.search);
   } catch (err) {
     console.log(err);
   }
 };
 
+const handlePagination = (page) => {
+  resultsView.render(model.getSearchResultsPage(page));
+  paginationView.render(model.state.search);
+};
+
 recipeView.addHandlerRender(handleRecipe);
 searchView.addHandlerSearch(handleSearchResults);
+paginationView.addEventHandler(handlePagination);

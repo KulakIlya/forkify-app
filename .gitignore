@@ -1,2 +1,4 @@
 flowcharts/
-node_modules
+node_modules/
+/.parcel-cache
+/123.txt
