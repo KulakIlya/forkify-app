@@ -16,6 +16,8 @@ const handleRecipe = async () => {
     if (!hash) return;
     recipeView.renderSpinner();
 
+    resultsView.update(model.getSearchResultsPage());
+
     await model.loadRecipe(hash);
 
     recipeView.render(model.state.recipe);
@@ -46,6 +48,13 @@ const handlePagination = (page) => {
   paginationView.render(model.state.search);
 };
 
+const handleServings = (newServings) => {
+  model.updateServings(newServings);
+
+  recipeView.update(model.state.recipe);
+};
+
 recipeView.addHandlerRender(handleRecipe);
+recipeView.addHandlerUpdateServings(handleServings);
 searchView.addHandlerSearch(handleSearchResults);
 paginationView.addEventHandler(handlePagination);

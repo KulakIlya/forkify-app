@@ -15,6 +15,33 @@ export default class View {
     this._parentElement.innerHTML = this._generateMarkup();
   }
 
+  update(data) {
+    this._data = data;
+
+    const newMarkup = this._generateMarkup();
+
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElements = [...newDOM.querySelectorAll('*')];
+
+    const currentElements = [...this._parentElement.querySelectorAll('*')];
+
+    newElements.forEach((elem, index) => {
+      const currentElement = currentElements[index];
+
+      if (
+        !elem.isEqualNode(currentElement) &&
+        elem.firstChild?.nodeValue.trim() !== ''
+      )
+        currentElement.textContent = elem.textContent;
+
+      if (!elem.isEqualNode(currentElement)) {
+        [...elem.attributes].forEach((attr) =>
+          currentElement.setAttribute(attr.name, attr.value)
+        );
+      }
+    });
+  }
+
   renderSpinner() {
     this._parentElement.innerHTML = `<div class="spinner">
       <svg>

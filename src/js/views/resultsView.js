@@ -7,11 +7,15 @@ class ResultsView extends View {
   _errorMessage = 'No results found for your query! Please try again';
 
   _generateMarkup() {
+    const hash = window.location.hash.slice(1);
+
     return this._data
       .map(
         ({ publisher, imageUrl, title, id }) => `
     <li class="preview">
-      <a class="preview__link preview__link--active" href="#${id}">
+      <a class="preview__link ${
+        hash === id ? 'preview__link--active' : 'x'
+      }" href="#${id}">
         <figure class="preview__fig">
           <img src="${imageUrl}" alt="${title}" />
         </figure>
