@@ -1,4 +1,5 @@
 flowcharts/
 node_modules/
+dist/
 .parcel-cache/
 /123.txt
