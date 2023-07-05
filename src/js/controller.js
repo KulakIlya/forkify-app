@@ -1,6 +1,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime'; // polyfilling async/await
 import * as model from './model.js';
+import bookmarkView from './views/bookmarkView.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
@@ -17,6 +18,7 @@ const handleRecipe = async () => {
     recipeView.renderSpinner();
 
     resultsView.update(model.getSearchResultsPage());
+    bookmarkView.update(model.state.bookmarks);
 
     await model.loadRecipe(hash);
 
@@ -54,7 +56,29 @@ const handleServings = (newServings) => {
   recipeView.update(model.state.recipe);
 };
 
-recipeView.addHandlerRender(handleRecipe);
-recipeView.addHandlerUpdateServings(handleServings);
-searchView.addHandlerSearch(handleSearchResults);
-paginationView.addEventHandler(handlePagination);
+const handleAddBookmark = () => {
+  if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
+  else model.removeBookmark(model.state.recipe.id);
+
+  recipeView.update(model.state.recipe);
+
+  bookmarkView.render(model.state.bookmarks);
+};
+
+const handleBookmarks = () => {
+  bookmarkView.render(model.state.bookmarks);
+};
+
+const init = () => {
+  bookmarkView.addHandlerRender(handleBookmarks);
+
+  recipeView.addHandlerRender(handleRecipe);
+  recipeView.addHandlerUpdateServings(handleServings);
+  recipeView.addBookmarkHandler(handleAddBookmark);
+
+  searchView.addHandlerSearch(handleSearchResults);
+
+  paginationView.addEventHandler(handlePagination);
+};
+
+init();

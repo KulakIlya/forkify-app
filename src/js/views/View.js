@@ -6,11 +6,13 @@ export default class View {
   _parentElement;
   _errorMessage = "We couldn't find recipe. Please try another one!";
 
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
     this._data = data;
+
+    if (!render) return this._generateMarkup();
 
     this._parentElement.innerHTML = this._generateMarkup();
   }

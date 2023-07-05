@@ -59,6 +59,10 @@ class PaginationView extends View {
     }
     return '';
   }
+
+  removePaginationButtons() {
+    this._parentElement.innerHTML = '';
+  }
 }
 
 export default new PaginationView();

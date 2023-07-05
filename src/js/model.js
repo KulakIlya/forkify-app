@@ -9,6 +9,7 @@ export const state = {
     page: 1,
     resultsPerPage: RES_PER_PAGE,
   },
+  bookmarks: [],
 };
 
 export const loadRecipe = async (hash) => {
@@ -17,6 +18,10 @@ export const loadRecipe = async (hash) => {
     const { recipe } = data.data;
 
     state.recipe = objectKeysToCamelCase(recipe);
+
+    if (state.bookmarks.some((bookmark) => bookmark.id === hash))
+      state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
   } catch (error) {
     throw error;
   }
@@ -31,6 +36,7 @@ export const loadSearchResults = async (query) => {
     state.search.results = recipes.map((recipe) =>
       objectKeysToCamelCase(recipe)
     );
+    state.search.page = 1;
   } catch (error) {
     throw error;
   }
@@ -52,3 +58,30 @@ export const updateServings = (newServings) => {
 
   state.recipe.servings = newServings;
 };
+
+const persistBookmarks = () => {
+  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
+
+export const addBookmark = (recipe) => {
+  state.bookmarks.push(recipe);
+
+  state.recipe.bookmarked = recipe.id === state.recipe.id;
+
+  persistBookmarks();
+};
+
+export const removeBookmark = (id) => {
+  const index = state.bookmarks.findIndex((bookmark) => bookmark.id === id);
+
+  state.bookmarks.splice(index, 1);
+  state.recipe.bookmarked = false;
+  persistBookmarks();
+};
+
+const init = () => {
+  const storage = localStorage.getItem('bookmarks');
+  if (storage) state.bookmarks = JSON.parse(storage);
+};
+
+init();
