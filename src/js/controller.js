@@ -95,18 +95,6 @@ const handleAddRecipe = async (newRecipe) => {
   }
 };
 
-const init = () => {
-  bookmarkView.addHandlerRender(handleBookmarks);
+// https://forkify-api.herokuapp.com/v2
 
-  recipeView.addHandlerRender(handleRecipe);
-  recipeView.addHandlerUpdateServings(handleServings);
-  recipeView.addBookmarkHandler(handleAddBookmark);
-
-  searchView.addHandlerSearch(handleSearchResults);
-
-  paginationView.addEventHandler(handlePagination);
-
-  addRecipeView.upload(handleAddRecipe);
-};
-
-init();
+///////////////////////////////////////
