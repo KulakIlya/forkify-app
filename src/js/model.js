@@ -1,5 +1,5 @@
-import { API_URL, RES_PER_PAGE } from './config';
-import { getJSON, objectKeysToCamelCase } from './helpers';
+import { API_URL, KEY, RES_PER_PAGE } from './config';
+import { AJAX, objectKeysToCamelCase } from './helpers';
 
 export const state = {
   recipe: {},
@@ -14,7 +14,7 @@ export const state = {
 
 export const loadRecipe = async (hash) => {
   try {
-    const data = await getJSON(`${API_URL}/${hash}`);
+    const data = await AJAX(`${API_URL}/${hash}?key${KEY}`);
     const { recipe } = data.data;
 
     state.recipe = objectKeysToCamelCase(recipe);
@@ -31,7 +31,7 @@ export const loadSearchResults = async (query) => {
   try {
     state.search.query = query;
 
-    const data = await getJSON(`${API_URL}?search=${query}`);
+    const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`);
     const { recipes } = data.data;
     state.search.results = recipes.map((recipe) =>
       objectKeysToCamelCase(recipe)
@@ -82,6 +82,46 @@ export const removeBookmark = (id) => {
 const init = () => {
   const storage = localStorage.getItem('bookmarks');
   if (storage) state.bookmarks = JSON.parse(storage);
+};
+
+export const uploadRecipe = async (newRecipe) => {
+  const { title, sourceUrl, image, publisher, cookingTime, servings } =
+    newRecipe;
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter((entry) => entry[0].startsWith('ingredient') && entry[1])
+      .map((ingredient) => {
+        const ingredientsArr = ingredient[1]
+          .split(',')
+          .map((item) => item.trim());
+        if (ingredientsArr.length != 3) {
+          throw new Error(
+            'Wrong ingredient format! Please use the correct format ;)'
+          );
+        }
+        const [quantity, unit, description] = ingredientsArr;
+        return {
+          quantity: quantity ? Number(quantity) : null,
+          unit,
+          description,
+        };
+      });
+    const recipe = {
+      title,
+      source_url: sourceUrl,
+      image_url: image,
+      publisher,
+      cooking_time: Number(cookingTime),
+      servings: Number(servings),
+      ingredients,
+    };
+    const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
+    // console.log(data);
+    state.recipe = objectKeysToCamelCase(data.data.recipe);
+    addBookmark(state.recipe);
+  } catch (error) {
+    throw error;
+  }
 };
 
 init();

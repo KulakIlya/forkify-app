@@ -1,11 +1,14 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime'; // polyfilling async/await
+import { MODAL_CLOSE_TIMEOUT } from './config.js';
 import * as model from './model.js';
+import addRecipeView from './views/addRecipeView.js';
 import bookmarkView from './views/bookmarkView.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
 import searchView from './views/searchView..js';
+addRecipeView;
 if (module.hot) {
   module.hot.accept();
 }
@@ -69,6 +72,29 @@ const handleBookmarks = () => {
   bookmarkView.render(model.state.bookmarks);
 };
 
+const handleAddRecipe = async (newRecipe) => {
+  try {
+    addRecipeView.renderSpinner();
+    await model.uploadRecipe(newRecipe);
+
+    addRecipeView.renderMessage();
+
+    setTimeout(() => {
+      addRecipeView.toggleWindow();
+    }, MODAL_CLOSE_TIMEOUT * 1000);
+
+    recipeView.render(model.state.recipe);
+    resultsView.render(model.state.search.results);
+
+    bookmarkView.render(model.state.bookmarks);
+
+    history.pushState(null, '', `#${model.state.recipe.id}`); // Changing URL without reloading the page
+  } catch (error) {
+    console.error(error);
+    addRecipeView.renderError(error);
+  }
+};
+
 const init = () => {
   bookmarkView.addHandlerRender(handleBookmarks);
 
@@ -79,6 +105,8 @@ const init = () => {
   searchView.addHandlerSearch(handleSearchResults);
 
   paginationView.addEventHandler(handlePagination);
+
+  addRecipeView.upload(handleAddRecipe);
 };
 
 init();

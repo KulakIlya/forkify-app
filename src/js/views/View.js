@@ -2,7 +2,7 @@ import icons from 'url:../../img/icons.svg';
 
 export default class View {
   _data;
-
+  _message;
   _parentElement;
   _errorMessage = "We couldn't find recipe. Please try another one!";
 
@@ -50,6 +50,18 @@ export default class View {
         <use href="${icons}#icon-loader"></use>
       </svg>
     </div> `;
+  }
+
+  renderMessage(message = this._message) {
+    const html = `<div class="message">
+    <div>
+      <svg>
+        <use href="${icons}#icon-smile"></use>
+      </svg>
+    </div>
+    <p>${message}</p>
+  </div> `;
+    this._parentElement.innerHTML = html;
   }
 
   renderError(message = this._errorMessage) {
